@@ -9,16 +9,16 @@ import {
   TableHead,
   TableRow,
   IconButton,
-  Chip,
   Menu,
   MenuItem,
   Typography,
   Paper,
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Invoice } from "@/lib/types/invoice";
 import Image from "next/image"
 import { morePathIcon } from "@/assets/icons"
+import { formatDate, formatRupiahList } from "@/utils/amountFormat"
+import { getStatusChip } from "./status"
 
 interface InvoiceTableProps {
   invoices: Invoice[];
@@ -62,51 +62,7 @@ export default function InvoiceTable({
   };
 
 
-  const formatRupiah = (value: number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-    }).format(value);
-  };
-
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
-
-
-  const getStatusChip = (status: string) => {
-    switch (status) {
-      case "Paid":
-        return (
-          <Chip
-            label="Paid"
-            sx={{ bgcolor: "#ECFDF5", color: "#027A48", fontWeight: 500 }}
-          />
-        );
-      case "Unpaid":
-        return (
-          <Chip
-            label="Unpaid"
-            sx={{ bgcolor: "#FEE4E2", color: "#B42318", fontWeight: 500 }}
-          />
-        );
-      case "Pending":
-        return (
-          <Chip
-            label="Pending"
-            sx={{ bgcolor: "#FEFCE8", color: "#9A6E03", fontWeight: 500 }}
-          />
-        );
-      default:
-        return <Chip label={status} />;
-    }
-  };
+  
 
   return (
     <TableContainer
@@ -150,7 +106,7 @@ export default function InvoiceTable({
 
               <TableCell>{getStatusChip(inv.status)}</TableCell>
 
-              <TableCell>{formatRupiah(inv.amount)}</TableCell>
+              <TableCell>{formatRupiahList(inv.amount)}</TableCell>
 
               <TableCell align="center">
                 <IconButton onClick={(e) => handleMenuOpen(e, inv)}>
